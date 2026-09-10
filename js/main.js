@@ -1,5 +1,3 @@
-
-
 let nombre = prompt("Ingresá tu nombre:");
 let apellido = prompt("Ingresá tu apellido:");
 let edad = parseInt(prompt("Ingresá tu edad:"));
@@ -24,6 +22,38 @@ let intentos = 0;
 let acceso = false;
 let saldo = 100000;
 
+class Usuario {
+    constructor(nombre, apellido, saldo, tipoCuenta) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.saldo = saldo;
+        this.tipoCuenta = tipoCuenta;
+    }
+
+    consultarSaldo() {
+        return "El saldo de " + this.nombre + " es de $" + this.saldo;
+    }
+
+    retirarDinero(cantidad) {
+        if (cantidad > 0 && cantidad <= this.saldo) {
+            this.saldo = this.saldo - cantidad;
+            return "Retiro realizado. Nuevo saldo: $" + this.saldo;
+        } else {
+            return "El monto no es válido.";
+        }
+    }
+}
+
+const usuario1 = new Usuario("Luciano", "Laricchia", 100000, "Cuenta corriente");
+const usuario2 = new Usuario("Juan", "Perez", 50000, "Caja de ahorro");
+const usuario3 = new Usuario("Maria", "Gomez", 200000, "Cuenta corriente");
+
+console.log(usuario1.consultarSaldo());
+console.log(usuario2.consultarSaldo());
+console.log(usuario3.consultarSaldo());
+
+console.log(usuario1.retirarDinero(10000));
+
 let operaciones = [
     "Consulta de saldo",
     "Retiro de dinero",
@@ -36,6 +66,7 @@ operaciones.push("Pago de servicio");
 operaciones.unshift("Inicio de sesión");
 
 let operacionEliminada = operaciones.pop();
+
 console.log("Se ha eliminado el elemento: " + operacionEliminada);
 
 console.log("Primera operación: " + operaciones[0]);
@@ -64,7 +95,6 @@ const calcularSaldo = (saldoActual, retiro) => {
     return saldoActual - retiro;
 };
 
-// Validación del PIN
 while (intentos < 3 && !acceso) {
     let ingreso = prompt("Ingrese su PIN:");
 
@@ -99,7 +129,7 @@ if (acceso) {
         console.log(resultadoSaldo);
 
         operaciones.push("Consulta de saldo");
-
+        
     } else if (opcion === "2") {
 
         let retiro = Number(prompt("¿Cuánto dinero desea retirar?"));
@@ -144,27 +174,6 @@ if (acceso) {
 
     alert("Cuenta bloqueada por demasiados intentos.");
     console.log("Cuenta bloqueada por demasiados intentos.");
-
-}
-
-
-let buscarOperacion = prompt(
-    "Ingresá una operación para buscar en el historial.\n" +
-    "Ejemplo: Consulta de saldo"
-);
-
-if (operaciones.includes(buscarOperacion)) {
-
-    let posicion = operaciones.indexOf(buscarOperacion);
-
-    alert("La operación existe y se encuentra en la posición " + posicion + ".");
-
-    console.log("La operación se encuentra en el índice: " + posicion);
-
-} else {
-
-    alert("La operación no se encuentra en el historial.");
-    console.log("La operación buscada no existe.");
 
 }
 

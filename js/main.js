@@ -54,6 +54,29 @@ console.log(usuario3.consultarSaldo());
 
 console.log(usuario1.retirarDinero(10000));
 
+const usuarios = [usuario1, usuario2, usuario3];
+
+let nombreBuscar = prompt("Ingresá el nombre del usuario que querés buscar:");
+
+let usuarioBuscado = usuarios.find(usuario => usuario.nombre === nombreBuscar);
+
+if (usuarioBuscado) {
+    console.log("Usuario encontrado:");
+    console.log(usuarioBuscado);
+} else {
+    console.log("El usuario no se encuentra en el sistema.");
+}
+
+let usuariosConSaldo = usuarios.filter(usuario => usuario.saldo >= 100000);
+
+console.log("Usuarios con saldo mayor o igual a $100000:");
+console.log(usuariosConSaldo);
+
+let nombresUsuarios = usuarios.map(usuario => usuario.nombre);
+
+console.log("Nombres de los usuarios:");
+console.log(nombresUsuarios);
+
 let operaciones = [
     "Consulta de saldo",
     "Retiro de dinero",

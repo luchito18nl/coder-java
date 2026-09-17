@@ -1,27 +1,3 @@
-let nombre = prompt("Ingresá tu nombre:");
-let apellido = prompt("Ingresá tu apellido:");
-let edad = parseInt(prompt("Ingresá tu edad:"));
-
-function crearMensaje(nombreUsuario, apellidoUsuario, edadUsuario) {
-    let edadProximoAnio = edadUsuario + 1;
-
-    return "Hola " + nombreUsuario + " " + apellidoUsuario +
-        ". Tenés " + edadUsuario +
-        " años. El próximo año vas a tener " +
-        edadProximoAnio + " años.";
-}
-
-let mensajeUsuario = crearMensaje(nombre, apellido, edad);
-
-console.log(mensajeUsuario);
-alert(mensajeUsuario);
-
-const PIN = "1234";
-
-let intentos = 0;
-let acceso = false;
-let saldo = 100000;
-
 class Usuario {
     constructor(nombre, apellido, saldo, tipoCuenta) {
         this.nombre = nombre;
@@ -48,34 +24,7 @@ const usuario1 = new Usuario("Luciano", "Laricchia", 100000, "Cuenta corriente")
 const usuario2 = new Usuario("Juan", "Perez", 50000, "Caja de ahorro");
 const usuario3 = new Usuario("Maria", "Gomez", 200000, "Cuenta corriente");
 
-console.log(usuario1.consultarSaldo());
-console.log(usuario2.consultarSaldo());
-console.log(usuario3.consultarSaldo());
-
-console.log(usuario1.retirarDinero(10000));
-
 const usuarios = [usuario1, usuario2, usuario3];
-
-let nombreBuscar = prompt("Ingresá el nombre del usuario que querés buscar:");
-
-let usuarioBuscado = usuarios.find(usuario => usuario.nombre === nombreBuscar);
-
-if (usuarioBuscado) {
-    console.log("Usuario encontrado:");
-    console.log(usuarioBuscado);
-} else {
-    console.log("El usuario no se encuentra en el sistema.");
-}
-
-let usuariosConSaldo = usuarios.filter(usuario => usuario.saldo >= 100000);
-
-console.log("Usuarios con saldo mayor o igual a $100000:");
-console.log(usuariosConSaldo);
-
-let nombresUsuarios = usuarios.map(usuario => usuario.nombre);
-
-console.log("Nombres de los usuarios:");
-console.log(nombresUsuarios);
 
 let operaciones = [
     "Consulta de saldo",
@@ -90,20 +39,12 @@ operaciones.unshift("Inicio de sesión");
 
 let operacionEliminada = operaciones.pop();
 
-console.log("Se ha eliminado el elemento: " + operacionEliminada);
-
-console.log("Primera operación: " + operaciones[0]);
-
 operaciones[1] = "Retiro de dinero realizado";
 
 operaciones.splice(3, 1, "Depósito realizado");
 
-function mostrarOperaciones(lista) {
-    console.log("===== HISTORIAL DE OPERACIONES =====");
-
-    for (let operacion of lista) {
-        console.log("Operación: " + operacion);
-    }
+function crearMensaje(nombreUsuario, apellidoUsuario) {
+    return "Hola " + nombreUsuario + " " + apellidoUsuario;
 }
 
 function validarPin(ingreso, pinCorrecto) {
@@ -118,86 +59,160 @@ const calcularSaldo = (saldoActual, retiro) => {
     return saldoActual - retiro;
 };
 
-while (intentos < 3 && !acceso) {
-    let ingreso = prompt("Ingrese su PIN:");
+function mostrarOperaciones(lista) {
+    let historial = "";
 
-    if (validarPin(ingreso, PIN)) {
-        acceso = true;
-        alert("Acceso correcto.");
-        console.log("Acceso correcto.");
-    } else {
-        intentos++;
-
-        alert("PIN incorrecto. Intentos restantes: " + (3 - intentos));
-
-        console.log("PIN incorrecto. Intentos restantes: " + (3 - intentos));
+    for (let operacion of lista) {
+        historial += `<p>Operación: ${operacion}</p>`;
     }
+
+    return historial;
 }
 
-if (acceso) {
+const contenedorUsuarios = document.querySelector("#contenedorUsuarios");
+const btnAgregar = document.querySelector("#btnAgregar");
+const mensaje = document.querySelector("#mensaje");
+const buscar = document.querySelector("#buscar");
 
-    let opcion = prompt(
-        "Bienvenido " + nombre + ".\n\n" +
-        "Seleccione una opción:\n" +
-        "1 - Consultar saldo\n" +
-        "2 - Retirar dinero\n" +
-        "3 - Ver historial de operaciones"
-    );
+const inputNombre = document.querySelector("#nombre");
+const inputApellido = document.querySelector("#apellido");
+const inputSaldo = document.querySelector("#saldo");
+const inputTipoCuenta = document.querySelector("#tipoCuenta");
 
-    if (opcion === "1") {
+function mostrarUsuarios(lista) {
+    contenedorUsuarios.innerHTML = "";
 
-        let resultadoSaldo = consultarSaldo(saldo);
+    lista.forEach((usuario) => {
+        contenedorUsuarios.innerHTML += `
+            <div class="usuario">
+                <h3>${usuario.nombre} ${usuario.apellido}</h3>
+                <p>Saldo: $${usuario.saldo}</p>
+                <p>Tipo de cuenta: ${usuario.tipoCuenta}</p>
+                <button class="btnSaldo" data-nombre="${usuario.nombre}">
+                    Consultar saldo
+                </button>
+                <button class="btnRetirar" data-nombre="${usuario.nombre}">
+                    Retirar dinero
+                </button>
+                <button class="btnEliminar" data-nombre="${usuario.nombre}">
+                    Eliminar
+                </button>
+            </div>
+        `;
+    });
 
-        alert(resultadoSaldo);
-        console.log(resultadoSaldo);
+    const botonesSaldo = document.querySelectorAll(".btnSaldo");
 
-        operaciones.push("Consulta de saldo");
-        
-    } else if (opcion === "2") {
+    botonesSaldo.forEach((boton) => {
+        boton.addEventListener("click", () => {
+            const nombreUsuario = boton.dataset.nombre;
 
-        let retiro = Number(prompt("¿Cuánto dinero desea retirar?"));
-
-        if (retiro > 0 && retiro <= saldo) {
-
-            saldo = calcularSaldo(saldo, retiro);
-
-            alert(
-                "Retiro realizado correctamente.\n" +
-                "Dinero retirado: $" + retiro + "\n" +
-                "Saldo restante: $" + saldo
+            const usuario = usuarios.find(
+                (usuario) => usuario.nombre === nombreUsuario
             );
 
-            console.log("Retiro realizado correctamente.");
-            console.log("Dinero retirado: $" + retiro);
-            console.log("Nuevo saldo: $" + saldo);
+            mensaje.textContent = usuario.consultarSaldo();
+        });
+    });
 
-            operaciones.push("Retiro de $" + retiro);
+    const botonesRetirar = document.querySelectorAll(".btnRetirar");
 
-        } else {
+    botonesRetirar.forEach((boton) => {
+        boton.addEventListener("click", () => {
+            const nombreUsuario = boton.dataset.nombre;
 
-            alert("El monto ingresado no es válido o supera el saldo disponible.");
-            console.log("Retiro rechazado.");
+            const usuario = usuarios.find(
+                (usuario) => usuario.nombre === nombreUsuario
+            );
 
-        }
+            let cantidad = prompt("¿Cuánto dinero desea retirar?");
 
-    } else if (opcion === "3") {
+            if (cantidad !== null) {
+                cantidad = Number(cantidad);
 
-        mostrarOperaciones(operaciones);
+                if (cantidad > 0 && cantidad <= usuario.saldo) {
+                    usuario.retirarDinero(cantidad);
 
-        alert("El historial de operaciones fue mostrado en la consola.");
+                    operaciones.push("Retiro de $" + cantidad);
 
-    } else {
+                    mensaje.textContent =
+                        "Retiro realizado correctamente. Nuevo saldo: $" +
+                        usuario.saldo;
 
-        alert("Opción inválida.");
-        console.log("El usuario ingresó una opción inválida.");
+                    mostrarUsuarios(usuarios);
+                } else {
+                    mensaje.textContent =
+                        "El monto ingresado no es válido o supera el saldo disponible.";
+                }
+            }
+        });
+    });
 
-    }
+    const botonesEliminar = document.querySelectorAll(".btnEliminar");
 
-} else {
+    botonesEliminar.forEach((boton) => {
+        boton.addEventListener("click", () => {
+            const nombreUsuario = boton.dataset.nombre;
 
-    alert("Cuenta bloqueada por demasiados intentos.");
-    console.log("Cuenta bloqueada por demasiados intentos.");
+            const indice = usuarios.findIndex(
+                (usuario) => usuario.nombre === nombreUsuario
+            );
 
+            usuarios.splice(indice, 1);
+
+            mostrarUsuarios(usuarios);
+
+            mensaje.textContent = "Usuario eliminado correctamente.";
+        });
+    });
 }
 
-mostrarOperaciones(operaciones);
+btnAgregar.addEventListener("click", () => {
+    const nombre = inputNombre.value;
+    const apellido = inputApellido.value;
+    const saldo = Number(inputSaldo.value);
+    const tipoCuenta = inputTipoCuenta.value;
+
+    if (
+        nombre === "" ||
+        apellido === "" ||
+        saldo <= 0 ||
+        tipoCuenta === ""
+    ) {
+        mensaje.textContent = "Completá todos los campos correctamente.";
+        return;
+    }
+
+    const nuevoUsuario = new Usuario(
+        nombre,
+        apellido,
+        saldo,
+        tipoCuenta
+    );
+
+    usuarios.push(nuevoUsuario);
+
+    mostrarUsuarios(usuarios);
+
+    mensaje.textContent = "Usuario agregado correctamente.";
+
+    inputNombre.value = "";
+    inputApellido.value = "";
+    inputSaldo.value = "";
+    inputTipoCuenta.value = "";
+});
+
+buscar.addEventListener("keyup", () => {
+    const texto = buscar.value.toLowerCase();
+
+    const usuariosFiltrados = usuarios.filter((usuario) => {
+        return (
+            usuario.nombre.toLowerCase().includes(texto) ||
+            usuario.apellido.toLowerCase().includes(texto)
+        );
+    });
+
+    mostrarUsuarios(usuariosFiltrados);
+});
+
+mostrarUsuarios(usuarios);

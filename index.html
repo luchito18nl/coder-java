@@ -1,15 +1,42 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>java</title>
-    <script src="./js/main.js" defer></script>
+    <title>Simulador de Cajero</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+    <main class="contenedor">
+        <h1>Simulador de Cajero</h1>
 
-    
+        <section class="formulario">
+            <h2>Agregar usuario</h2>
+
+            <input type="text" id="nombre" placeholder="Nombre">
+            <input type="text" id="apellido" placeholder="Apellido">
+            <input type="number" id="saldo" placeholder="Saldo">
+            <input type="text" id="tipoCuenta" placeholder="Tipo de cuenta">
+
+            <button id="btnAgregar">Agregar usuario</button>
+
+            <p id="mensaje"></p>
+        </section>
+
+        <section class="busqueda">
+            <h2>Buscar usuario</h2>
+
+            <input type="text" id="buscar" placeholder="Escribí un nombre para buscar">
+        </section>
+
+        <section>
+            <h2>Usuarios</h2>
+
+            <div id="contenedorUsuarios"></div>
+        </section>
+    </main>
+
+    <script src="js/main.js"></script>
 </body>
 </html>

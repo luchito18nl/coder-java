@@ -76,7 +76,7 @@ button {
     margin: 5px;
     border: none;
     border-radius: 8px;
-    color: white;
+    color: black;
     cursor: pointer;
     font-weight: bold;
     transition: 0.3s;
@@ -89,6 +89,11 @@ button:hover {
 
 form button {
     background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: black;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
 #buscar {
@@ -171,6 +176,7 @@ form button {
         width: 92%;
         padding: 25px 0;
     }
+
 
     h1 {
         font-size: 30px;

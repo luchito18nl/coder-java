@@ -21,29 +21,37 @@ class Usuario {
 }
 
 
-const usuario1 = new Usuario(
-    "Luciano",
-    "Laricchia",
-    100000,
-    "Cuenta corriente"
-);
+const datosGuardados = localStorage.getItem("usuarios");
 
-const usuario2 = new Usuario(
-    "Juan",
-    "Perez",
-    50000,
-    "Caja de ahorro"
-);
-
-const usuario3 = new Usuario(
-    "Maria",
-    "Gomez",
-    200000,
-    "Cuenta corriente"
-);
-
-
-const usuarios = [usuario1, usuario2, usuario3];
+let usuarios = datosGuardados
+    ? JSON.parse(datosGuardados).map((usuario) => {
+        return new Usuario(
+            usuario.nombre,
+            usuario.apellido,
+            usuario.saldo,
+            usuario.tipoCuenta
+        );
+    })
+    : [
+        new Usuario(
+            "Luciano",
+            "Laricchia",
+            100000,
+            "Cuenta corriente"
+        ),
+        new Usuario(
+            "Juan",
+            "Perez",
+            50000,
+            "Caja de ahorro"
+        ),
+        new Usuario(
+            "Maria",
+            "Gomez",
+            200000,
+            "Cuenta corriente"
+        )
+    ];
 
 
 const formularioUsuario = document.querySelector("#formularioUsuario");
@@ -52,43 +60,61 @@ const mensaje = document.querySelector("#mensaje");
 const buscar = document.querySelector("#buscar");
 
 
+function guardarUsuarios() {
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+}
+
+
 function mostrarUsuarios(lista) {
 
     contenedorUsuarios.innerHTML = "";
 
     lista.forEach((usuario) => {
 
+        const {
+            nombre,
+            apellido,
+            saldo,
+            tipoCuenta
+        } = usuario;
+
+        const estadoSaldo = saldo >= 100000
+            ? "Saldo disponible"
+            : "Saldo menor a $100000";
+
         contenedorUsuarios.innerHTML += `
             <div class="usuario">
 
-                <h3>${usuario.nombre} ${usuario.apellido}</h3>
+                <h3>${nombre} ${apellido}</h3>
 
-                <p>Saldo: $${usuario.saldo}</p>
+                <p>Saldo: $${saldo}</p>
 
-                <p>Tipo de cuenta: ${usuario.tipoCuenta}</p>
+                <p>Tipo de cuenta: ${tipoCuenta}</p>
+
+                <p>${estadoSaldo}</p>
 
                 <input
                     type="number"
                     class="inputRetiro"
-                    data-nombre="${usuario.nombre}"
+                    data-nombre="${nombre}"
                     placeholder="Monto a retirar"
                 >
 
                 <button
                     class="btnSaldo"
-                    data-nombre="${usuario.nombre}">
+                    data-nombre="${nombre}">
                     Consultar saldo
                 </button>
 
                 <button
                     class="btnRetirar"
-                    data-nombre="${usuario.nombre}">
+                    data-nombre="${nombre}">
                     Retirar dinero
                 </button>
 
                 <button
                     class="btnEliminar"
-                    data-nombre="${usuario.nombre}">
+                    data-nombre="${nombre}">
                     Eliminar
                 </button>
 
@@ -109,7 +135,8 @@ function mostrarUsuarios(lista) {
                 (usuario) => usuario.nombre === nombreUsuario
             );
 
-            mensaje.textContent = usuario.consultarSaldo();
+            mensaje.textContent =
+                usuario?.consultarSaldo() ?? "Usuario no encontrado.";
         });
     });
 
@@ -130,17 +157,17 @@ function mostrarUsuarios(lista) {
                 `.inputRetiro[data-nombre="${nombreUsuario}"]`
             );
 
-            const cantidad = Number(inputRetiro.value);
+            const cantidad = Number(inputRetiro?.value ?? 0);
 
-            if (cantidad > 0 && cantidad <= usuario.saldo) {
+            if (usuario?.retirarDinero(cantidad)) {
 
-                usuario.retirarDinero(cantidad);
+                guardarUsuarios();
+
+                mostrarUsuarios(usuarios);
 
                 mensaje.textContent =
                     "Retiro realizado correctamente. Nuevo saldo: $" +
                     usuario.saldo;
-
-                mostrarUsuarios(usuarios);
 
             } else {
 
@@ -163,12 +190,17 @@ function mostrarUsuarios(lista) {
                 (usuario) => usuario.nombre === nombreUsuario
             );
 
-            usuarios.splice(indice, 1);
+            if (indice !== -1) {
 
-            mostrarUsuarios(usuarios);
+                usuarios.splice(indice, 1);
 
-            mensaje.textContent =
-                "Usuario eliminado correctamente.";
+                guardarUsuarios();
+
+                mostrarUsuarios(usuarios);
+
+                mensaje.textContent =
+                    "Usuario eliminado correctamente.";
+            }
         });
     });
 }
@@ -178,10 +210,10 @@ formularioUsuario.addEventListener("submit", (evento) => {
 
     evento.preventDefault();
 
-    const nombre = document.querySelector("#nombre").value;
-    const apellido = document.querySelector("#apellido").value;
+    const nombre = document.querySelector("#nombre").value.trim();
+    const apellido = document.querySelector("#apellido").value.trim();
     const saldo = Number(document.querySelector("#saldo").value);
-    const tipoCuenta = document.querySelector("#tipoCuenta").value;
+    const tipoCuenta = document.querySelector("#tipoCuenta").value.trim();
 
 
     if (
@@ -207,6 +239,8 @@ formularioUsuario.addEventListener("submit", (evento) => {
 
 
     usuarios.push(nuevoUsuario);
+
+    guardarUsuarios();
 
     mostrarUsuarios(usuarios);
 

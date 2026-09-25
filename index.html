@@ -6,37 +6,83 @@
     <title>Simulador de Cajero</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
     <main class="contenedor">
+
         <h1>Simulador de Cajero</h1>
 
         <section class="formulario">
+
             <h2>Agregar usuario</h2>
 
-            <input type="text" id="nombre" placeholder="Nombre">
-            <input type="text" id="apellido" placeholder="Apellido">
-            <input type="number" id="saldo" placeholder="Saldo">
-            <input type="text" id="tipoCuenta" placeholder="Tipo de cuenta">
+            <form id="formularioUsuario">
 
-            <button id="btnAgregar">Agregar usuario</button>
+                <input
+                    type="text"
+                    id="nombre"
+                    placeholder="Nombre"
+                    required
+                >
+
+                <input
+                    type="text"
+                    id="apellido"
+                    placeholder="Apellido"
+                    required
+                >
+
+                <input
+                    type="number"
+                    id="saldo"
+                    placeholder="Saldo"
+                    required
+                >
+
+                <input
+                    type="text"
+                    id="tipoCuenta"
+                    placeholder="Tipo de cuenta"
+                    required
+                >
+
+                <button type="submit">
+                    Agregar usuario
+                </button>
+
+            </form>
 
             <p id="mensaje"></p>
+
         </section>
+
 
         <section class="busqueda">
+
             <h2>Buscar usuario</h2>
 
-            <input type="text" id="buscar" placeholder="Escribí un nombre para buscar">
+            <input
+                type="text"
+                id="buscar"
+                placeholder="Escribí un nombre o apellido"
+            >
+
         </section>
 
+
         <section>
+
             <h2>Usuarios</h2>
 
             <div id="contenedorUsuarios"></div>
+
         </section>
+
     </main>
 
+
     <script src="js/main.js"></script>
+
 </body>
 </html>
